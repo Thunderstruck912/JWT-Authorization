@@ -1,4 +1,5 @@
 const userService = require("../service/user-service");
+// const {validationResult} = require("express-validator");
 
 class UserController {
 	// вызов функций по запросу router//
@@ -12,9 +13,10 @@ class UserController {
 			}); // сохранение в cookie refreshToken , не будет работать без cookie-parser
 			return response.json(userData);
 		} catch (e) {
-      console.log(e)
+			console.log(e);
 		}
 	}
+
 	async login(request, response, next) {
 		try {
 		} catch (e) {}

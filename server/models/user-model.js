@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const {Schema, model} = require("mongoose");
 
 // Описание всех полей в сущности пользователя //
 const UserSchema = new Schema({
@@ -8,4 +8,4 @@ const UserSchema = new Schema({
 	activationLink: {type: String},
 });
 
-module.exports = model('User', UserSchema);
+module.exports = model("User", UserSchema);

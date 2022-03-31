@@ -3,12 +3,12 @@ const tokenModel = require("../models/token-model");
 
 class TokenService {
 	// функция для генерации JWT токенов //
-	generateToken(payload) {
-		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {
-			expiresIn: "15m",
+	generateTokens(payload) {
+		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+			expiresIn: "15s",
 		});
-		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_TOKEN, {
-			expiresIn: "30d",
+		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+			expiresIn: "30s",
 		});
 		return {
 			accessToken,
@@ -17,14 +17,41 @@ class TokenService {
 	}
 	// сохранение refreshToken в BD //
 	async saveToken(userId, refreshToken) {
-		const tokenData = await tokenModel.findOne({user: userId}); // поиск token по userId в BD //
+		const tokenData = await tokenModel.findOne({user: userId});
 		if (tokenData) {
-			tokenData.refreshToken = refreshToken; // перезаписть refreshToken //
-			return tokenData.save(); // обновление токена в BD //
+			tokenData.refreshToken = refreshToken;
+			return tokenData.save();
 		}
-		const token = await tokenModel.create({user: userId, refreshToken}); // кейс если пользователь не найден //
+		const token = await tokenModel.create({user: userId, refreshToken});
 		return token;
 	}
+
+	// async removeToken(refreshToken) {
+	// 	const tokenData = await tokenModel.deleteOne({refreshToken});
+	// 	return tokenData;
+	// }
+
+	// async findToken(refreshToken) {
+	// 	const tokenData = await tokenModel.findOne({refreshToken});
+	// 	return tokenData;
+	// }
+	// validateAccessToken(token) {
+	// 	try {
+	// 		const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+	// 		return userData;
+	// 	} catch (e) {
+	// 		return null;
+	// 	}
+	// }
+
+	// validateRefreshToken(token) {
+	// 	try {
+	// 		const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+	// 		return userData;
+	// 	} catch (e) {
+	// 		return null;
+	// 	}
+	// }
 }
 
 module.exports = new TokenService();
